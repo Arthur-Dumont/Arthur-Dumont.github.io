@@ -3,94 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>CV en ligne</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        h1, h3 {
-            text-align: center;
-        }
-        .responses {
-            margin-top: 20px;
-            border-top: 1px solid #ccc;
-            padding-top: 10px;
-            display: none; /* Masquer les réponses par défaut */
-        }
-        .admin-login {
-            margin-bottom: 20px;
-            text-align: center;
-            display: none; /* Masquer la section de connexion par défaut */
-        }
-        label {
-            display: block;
-            margin: 10px 0 5px;
-        }
-        input[type="text"],
-        input[type="email"],
-        textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        input[type="submit"],
-        button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            background-color: #007BFF;
-            color: white;
-            cursor: pointer;
-        }
-        button:hover, input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-        .modal {
-            display: none; 
-            position: fixed;
-            z-index: 1; 
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto; 
-            background-color: rgba(0,0,0,0.5); 
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%; 
-            max-width: 400px;
-            text-align: center;
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css"> <!-- Lien vers le fichier CSS externe -->
 </head>
-<body>
-    <h1>CV Arthur Dumont</h1>
-
-    <h3><a href="#" id="contactLink">Contactez-moi</a></h3>
-    
-    <form id="contactForm">
+<body> 
+    <h1 style="color:red;">CV Arthur Dumont</h1>
+    <h3 id="haut"><a href="#" id="contactLink">Contactez-moi</a></h3>
+    <a href="#bas">Bas de page</a>
+    <form id="contactForm" onsubmit="return validateEmail()">
         <label for="prenom">Votre prénom :</label>
         <input type="text" name="prenom" required>
         <label for="nom">Votre nom :</label>
         <input type="text" name="nom" required>
+        M.<input type="radio" name="civilité" value="M." required>
+        Mme <input type="radio" name="civilité" value="Mme" required><br>
+        <label for="ville">Votre ville :</label>
+        <input type="text" name="ville" required>
         <label for="email">Votre adresse mail :</label>
         <input type="email" name="email" required>
         <label for="message">Votre message :</label>
@@ -122,96 +49,124 @@
     </div>
 
     <script>
-        const ADMIN_USERNAME = 'admin'; // Identifiant administrateur
-        const ADMIN_PASSWORD = 'admin'; // Mot de passe administrateur
+        // Le code JavaScript reste inchangé
+        document.addEventListener('DOMContentLoaded', function() {
+            const ADMIN_USERNAME = 'admin'; // Identifiant administrateur
+            const ADMIN_PASSWORD = 'admin'; // Mot de passe administrateur
 
-        document.getElementById('contactForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Empêche le rechargement de la page
+            document.getElementById('contactForm').addEventListener('submit', function(event) {
+                event.preventDefault(); // Empêche le rechargement de la page
 
-            const formData = new FormData(this);
-            const response = {
-                prenom: formData.get('prenom'),
-                nom: formData.get('nom'),
-                email: formData.get('email'),
-                message: formData.get('message'),
+                const formData = new FormData(this);
+                const response = {
+                    prenom: formData.get('prenom'),
+                    nom: formData.get('nom'),
+                    civilité: formData.get('civilité'),
+                    ville: formData.get('ville'),
+                    email: formData.get('email'),
+                    message: formData.get('message'),
+                };
+
+                // Récupérer les réponses précédentes
+                const responses = JSON.parse(localStorage.getItem('responses')) || [];
+                responses.push(response);
+                localStorage.setItem('responses', JSON.stringify(responses));
+
+                // Réinitialiser le formulaire
+                this.reset();
+            });
+
+            document.getElementById('contactLink').addEventListener('click', function(event) {
+                event.preventDefault();
+                document.getElementById('loginModal').style.display = 'block';
+            });
+
+            document.getElementById('closeModal').addEventListener('click', function() {
+                document.getElementById('loginModal').style.display = 'none';
+            });
+
+            document.getElementById('modalLoginBtn').addEventListener('click', function() {
+                const username = document.getElementById('modalAdminUser').value;
+                const password = document.getElementById('modalAdminPass').value;
+
+                if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                    alert("Connexion réussie!");
+                    document.querySelector('.admin-login').style.display = 'block'; // Affiche la section de connexion
+                    document.querySelector('.responses').style.display = 'block'; // Affiche la section des réponses
+                    displayResponses();
+                    document.getElementById('loginModal').style.display = 'none'; // Ferme le modal
+                } else {
+                    alert("Identifiants incorrects.");
+                }
+            });
+
+            function displayResponses() {
+                const responses = JSON.parse(localStorage.getItem('responses')) || [];
+                const responseList = document.getElementById('responseList');
+                responseList.innerHTML = ''; // Réinitialise la liste
+
+                responses.forEach((response, index) => {
+                    responseList.innerHTML += `
+                        <div class="response-item">
+                            <strong>Prénom:</strong> ${response.prenom}<br>
+                            <strong>Nom:</strong> ${response.nom}<br>
+                            <strong>Civilité:</strong> ${response.civilité}<br>
+                            <strong>Ville:</strong> ${response.ville}<br>
+                            <strong>Email:</strong> ${response.email}<br>
+                            <strong>Message:</strong> ${response.message}<br>
+                            <button onclick="deleteResponse(${index})">Supprimer</button>
+                            <hr>
+                        </div>
+                    `;
+                });
+            }
+
+            function deleteResponse(index) {
+                const responses = JSON.parse(localStorage.getItem('responses'));
+                responses.splice(index, 1);
+                localStorage.setItem('responses', JSON.stringify(responses));
+                displayResponses();
+            }
+
+            // Fonction pour valider l'email
+            function validateEmail() {
+                const emailInput = document.querySelector('input[name="email"]');
+                const email = emailInput.value;
+
+                const isValid = email.includes('@') && email.lastIndexOf('.') > email.indexOf('@');
+                if (!isValid) {
+                    alert("Veuillez entrer une adresse email valide.");
+                    return false;
+                }
+                return true;
+            }
+
+            // Afficher les réponses au chargement de la page
+            window.onload = function() {
+                const responses = JSON.parse(localStorage.getItem('responses')) || [];
+                if (responses.length > 0) {
+                    document.querySelector('.responses').style.display = 'none'; // Masquer les réponses
+                }
             };
 
-            // Récupérer les réponses précédentes
-            const responses = JSON.parse(localStorage.getItem('responses')) || [];
-            responses.push(response);
-            localStorage.setItem('responses', JSON.stringify(responses));
-
-            // Réinitialiser le formulaire
-            this.reset();
+            // Ferme le modal si l'utilisateur clique en dehors de la fenêtre modale
+            window.onclick = function(event) {
+                const modal = document.getElementById('loginModal');
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            };
         });
-
-        document.getElementById('contactLink').addEventListener('click', function(event) {
-            event.preventDefault();
-            document.getElementById('loginModal').style.display = 'block';
-        });
-
-        document.getElementById('closeModal').addEventListener('click', function() {
-            document.getElementById('loginModal').style.display = 'none';
-        });
-
-        document.getElementById('modalLoginBtn').addEventListener('click', function() {
-            const username = document.getElementById('modalAdminUser').value;
-            const password = document.getElementById('modalAdminPass').value;
-
-            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-                alert("Connexion réussie!");
-                document.querySelector('.admin-login').style.display = 'block'; // Affiche la section de connexion
-                document.querySelector('.responses').style.display = 'block'; // Affiche la section des réponses
-                displayResponses();
-                document.getElementById('loginModal').style.display = 'none'; // Ferme le modal
-            } else {
-                alert("Identifiants incorrects.");
-            }
-        });
-
-        function displayResponses() {
-            const responses = JSON.parse(localStorage.getItem('responses')) || [];
-            const responseList = document.getElementById('responseList');
-            responseList.innerHTML = ''; // Réinitialise la liste
-
-            responses.forEach((response, index) => {
-                responseList.innerHTML += `
-                    <div class="response-item">
-                        <strong>Prénom:</strong> ${response.prenom}<br>
-                        <strong>Nom:</strong> ${response.nom}<br>
-                        <strong>Email:</strong> ${response.email}<br>
-                        <strong>Message:</strong> ${response.message}<br>
-                        <button onclick="deleteResponse(${index})">Supprimer</button>
-                        <hr>
-                    </div>
-                `;
-            });
-        }
-
-        function deleteResponse(index) {
-            const responses = JSON.parse(localStorage.getItem('responses'));
-            responses.splice(index, 1);
-            localStorage.setItem('responses', JSON.stringify(responses));
-            displayResponses();
-        }
-
-        // Afficher les réponses au chargement de la page
-        window.onload = function() {
-            const responses = JSON.parse(localStorage.getItem('responses')) || [];
-            if (responses.length > 0) {
-                document.querySelector('.responses').style.display = 'none'; // Masquer les réponses
-            }
-        };
-
-        // Ferme le modal si l'utilisateur clique en dehors de la fenêtre modale
-        window.onclick = function(event) {
-            const modal = document.getElementById('loginModal');
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        };
     </script>
-    si vous souhaite revoir mon cv veuillez cliqué sur le lien suivant
-    <a href="index.html">vers mon cv</a>
+
+    <p>Si vous souhaitez revoir mon CV, veuillez cliquer sur le lien suivant: <a href="index.html">vers mon CV</a></p>
+    
+    <br><br><br><br>
+    <footer>
+        <p>@arthur <a href="#haut">Haut de la page</a></p>
+        <h4 id="bas">Merci pour votre réponse.</h4>
+        Pour toute question, veuillez vous adresser sur notre discord avec ce programme
+        <p>Si vous souhaitez revenir vers mon site cliquez sur le lien suivant: <a href="carte/carte.html">Mon site</a></p>
+    </footer>
 </body>
 </html>

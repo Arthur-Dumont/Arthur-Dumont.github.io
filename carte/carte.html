@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agents Rainbow Six Siege</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .container {
+            display: none; /* Masquer par défaut */
+            margin-top: 20px;
+        }
+
+        .agent {
+            cursor: pointer;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            flex: 1 1 30%; /* Flex pour 3 colonnes */
+        }
+
+        .agent:hover {
+            background-color: #f0f0f0;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap; /* Pour s'assurer que ça s'ajuste */
+        }
+
+        #bio, #conseils {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: none;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Mes conseils sur R6</h1>
+
+<h2>Choisissez une catégorie</h2>
+<button onclick="showAgents('attaquants')">Attaquants</button>
+<button onclick="showAgents('défenseurs')">Défenseurs</button>
+
+<div id="agents" class="container">
+    <h2 id="categoryTitle"></h2>
+    <div id="agents-list" class="row"></div>
+</div>
+
+<div id="bio">
+    <p id="bioText"></p>
+    <button onclick="showConseils()">Mes conseils</button>
+</div>
+
+<div id="conseils">
+    <p id="conseilsText"></p>
+</div>
+
+<script src="agents.js"></script>
+<script src="conseils.js"></script>
+<script>
+function showAgents(type) {
+    const agents = agentsData[type];
+    const agentsList = document.getElementById('agents-list');
+    agentsList.innerHTML = ''; // Vider la liste existante
+    agents.forEach(agent => {
+        const agentDiv = document.createElement('div');
+        agentDiv.className = 'agent';
+        agentDiv.innerText = agent.name;
+        agentDiv.onclick = () => showBio(agent.name, type);
+        agentsList.appendChild(agentDiv);
+    });
+    
+    document.getElementById('categoryTitle').innerText = type.charAt(0).toUpperCase() + type.slice(1);
+    document.getElementById('agents').style.display = 'block'; // Afficher la liste
+}
+
+function showBio(agentName, type) {
+    const agent = agentsData[type].find(a => a.name === agentName);
+    document.getElementById('bioText').innerText = agent.bio;
+    document.getElementById('bio').style.display = 'block'; // Afficher la bio
+    document.getElementById('conseils').style.display = 'none'; // Masquer les conseils
+}
+
+function showConseils() {
+    const agentName = document.getElementById('bioText').innerText.split(' ')[0]; // Prendre le nom de l'agent
+    const conseils = conseilsData[agentName] || "Aucun conseil disponible.";
+    document.getElementById('conseilsText').innerText = conseils;
+    document.getElementById('conseils').style.display = 'block'; // Afficher les conseils
+}
+</script>
+<p>Si vous souhaitez me posez des question n'héstiez pas a cliqué sur le lien suivant <a href="../contact.html">vers mon formulaire de contact</a></p>
+</body>
+</html>
