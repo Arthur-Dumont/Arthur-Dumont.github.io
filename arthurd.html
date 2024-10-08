@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Énigme</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Résous l'énigme !</h1>
+    <p id="enigme">Quel a été la meilleur copine a arthur dumont?</p>
+    
+    <input type="text" id="reponse" placeholder="Votre réponse">
+    <button onclick="verifierReponse()">Soumettre</button>
+    
+    <p id="resultat"></p>
+
+    <script>
+        function verifierReponse() {
+            const bonneReponse = "jun";
+            const reponse = document.getElementById("reponse").value.toLowerCase();
+            const resultat = document.getElementById("resultat");
+
+            if (reponse === bonneReponse) {
+                resultat.textContent = "Félicitations ! Vous avez trouvé la bonne réponse.";
+            } else {
+                resultat.textContent = "Désolé, ce n'est pas la bonne réponse. Essayez encore !";
+            }
+        }
+    </script>
+
+</body>
+</html>

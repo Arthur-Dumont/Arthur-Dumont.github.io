@@ -3,105 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agents Rainbow Six Siege</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-
-        .container {
-            display: none; /* Masquer par défaut */
-            margin-top: 20px;
-        }
-
-        .agent {
-            cursor: pointer;
-            margin: 10px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-            flex: 1 1 30%; /* Flex pour 3 colonnes */
-        }
-
-        .agent:hover {
-            background-color: #f0f0f0;
-        }
-
-        .row {
-            display: flex;
-            flex-wrap: wrap; /* Pour s'assurer que ça s'ajuste */
-        }
-
-        #bio, #conseils {
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            display: none;
-        }
-
-        h1, h2 {
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
+    <title>Rainbow Six Siege Menu</title>
 </head>
 <body>
-
-<h1>Mes conseils sur R6</h1>
-
-<h2>Choisissez une catégorie</h2>
-<button onclick="showAgents('attaquants')">Attaquants</button>
-<button onclick="showAgents('defenseurs')">Défenseurs</button>
-
-<div id="agents" class="container">
-    <h2 id="categoryTitle"></h2>
-    <div id="agents-list" class="row"></div>
-</div>
-
-<div id="bio">
-    <p id="bioText"></p>
-    <button onclick="showConseils()">Mes conseils</button>
-</div>
-
-<div id="conseils">
-    <p id="conseilsText"></p>
-</div>
-
-<script src="agents.js"></script>
-<script src="conseils.js"></script>
-<script>
-function showAgents(type) {
-    const agents = agentsData[type];
-    const agentsList = document.getElementById('agents-list');
-    agentsList.innerHTML = ''; // Vider la liste existante
-    agents.forEach(agent => {
-        const agentDiv = document.createElement('div');
-        agentDiv.className = 'agent';
-        agentDiv.innerText = agent.name;
-        agentDiv.onclick = () => showBio(agent.name, type);
-        agentsList.appendChild(agentDiv);
-    });
-    
-    document.getElementById('categoryTitle').innerText = type.charAt(0).toUpperCase() + type.slice(1);
-    document.getElementById('agents').style.display = 'block'; // Afficher la liste
-}
-
-function showBio(agentName, type) {
-    const agent = agentsData[type].find(a => a.name === agentName);
-    document.getElementById('bioText').innerText = agent.bio;
-    document.getElementById('bio').style.display = 'block'; // Afficher la bio
-    document.getElementById('conseils').style.display = 'none'; // Masquer les conseils
-}
-
-function showConseils() {
-    const agentName = document.getElementById('bioText').innerText.split(' ')[0]; // Prendre le nom de l'agent
-    const conseils = conseilsData[agentName] || "Aucun conseil disponible.";
-    document.getElementById('conseilsText').innerText = conseils;
-    document.getElementById('conseils').style.display = 'block'; // Afficher les conseils
-}
-</script>
-<p>Si vous souhaitez me posez des question n'héstiez pas a cliqué sur le lien suivant <a href="../contact.html">vers mon formulaire de contact</a></p>
+    <header>
+        <h1>Rainbow Six Siege</h1>
+        <nav>
+            <ul id="menu">
+                <li><a href="#" onclick="showSection('presentation')">Présentation du jeu</a></li>
+                <li><a href="#" onclick="showSection('agents')">Agents</a></li>
+                <li><a href="#" onclick="showSection('operators')">Opérateurs</a></li>
+                <li><a href="#" onclick="showSection('maps')">Cartes</a></li>
+                <li><a href="#" onclick="showSection('weapons')">Armes</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="presentation" class="content-section">
+            <h2>Présentation du Jeu</h2>
+            <p>*Tom Clancy's Rainbow Six Siege* est un jeu de tir tactique où les joueurs prennent le contrôle de divers opérateurs d'élite, chacun ayant des compétences uniques.</p>
+        </section>
+        <section id="agents" class="content-section" style="display: none;">
+            <h2>Agents</h2>
+            <h3>Attaquants</h3>
+            <p>Les attaquants sont spécialisés dans l'infiltration et la prise de contrôle des zones. Ils utilisent des gadgets pour déjouer les défenses ennemies.</p>
+            <h3>Défenseurs</h3>
+            <p>Les défenseurs protègent les zones en utilisant des barricades et divers gadgets pour empêcher les attaquants d'entrer.</p>
+        </section>
+        <section id="operators" class="content-section" style="display: none;">
+            <h2>Opérateurs</h2>
+            <p>Liste des opérateurs disponibles.</p>
+        </section>
+        <section id="maps" class="content-section" style="display: none;">
+            <h2>Cartes</h2>
+            <p>Détails sur les cartes disponibles.</p>
+        </section>
+        <section id="weapons" class="content-section" style="display: none;">
+            <h2>Armes</h2>
+            <p>Liste des armes disponibles.</p>
+        </section>
+    </main>
+    <script src="script.js"></script>
 </body>
 </html>
